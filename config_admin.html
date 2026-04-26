@@ -73,6 +73,9 @@
       background: #10b981; padding: 8px 16px;
       border-radius: 50px; font-size: 12px;
     }
+    .error-status {
+      background: #dc2626;
+    }
   </style>
 </head>
 <body>
@@ -80,7 +83,6 @@
   <h1><i class="fa-solid fa-gear"></i> Painel Admin</h1>
   <p class="sub">Gerencie sua árvore de links de afiliado</p>
   
-  <!-- Configurações Gerais -->
   <div class="card">
     <h2><i class="fa-solid fa-store"></i> Configurações Gerais</h2>
     <input type="text" id="siteNome" placeholder="Nome do site (ex: Achado para Você)">
@@ -91,7 +93,6 @@
     <input type="text" id="whatsappUrl" placeholder="WhatsApp URL (link do grupo/canal)">
   </div>
   
-  <!-- Oferta Relâmpago -->
   <div class="card">
     <h2><i class="fa-solid fa-bolt"></i> Oferta Relâmpago (com timer)</h2>
     <input type="text" id="relampagoTitulo" placeholder="Título do produto">
@@ -101,7 +102,6 @@
     <button id="removeRelampago" class="btn-danger">Remover</button>
   </div>
   
-  <!-- Destaque Fixo -->
   <div class="card">
     <h2><i class="fa-solid fa-fire"></i> Produto Destaque (sem timer)</h2>
     <input type="text" id="destaqueTitulo" placeholder="Título do produto">
@@ -110,7 +110,6 @@
     <button id="removeDestaque" class="btn-danger">Remover</button>
   </div>
   
-  <!-- Shopee -->
   <div class="card">
     <h2><i class="fa-solid fa-bag-shopping"></i> Shopee</h2>
     <div id="shopeeList"></div>
@@ -119,7 +118,6 @@
     <button id="addShopee">Adicionar Link</button>
   </div>
   
-  <!-- Mercado Livre -->
   <div class="card">
     <h2><i class="fa-solid fa-truck-fast"></i> Mercado Livre</h2>
     <div id="mlList"></div>
@@ -128,7 +126,6 @@
     <button id="addMl">Adicionar Link</button>
   </div>
   
-  <!-- Amazon -->
   <div class="card">
     <h2><i class="fa-brands fa-amazon"></i> Amazon</h2>
     <div id="amazonList"></div>
@@ -137,7 +134,6 @@
     <button id="addAmazon">Adicionar Link</button>
   </div>
   
-  <!-- Cupons -->
   <div class="card">
     <h2><i class="fa-solid fa-ticket"></i> Cupons</h2>
     <div id="cuponsList"></div>
@@ -167,12 +163,45 @@
     cupons: []
   };
   
-  function loadFromStorage() {
-    const saved = localStorage.getItem('afiliadoData');
-    if (saved) {
-      config = JSON.parse(saved);
+  async function loadFromGitHub() {
+    try {
+      const response = await fetch('/_data/config.json');
+      if (response.ok) {
+        const data = await response.json();
+        config = { ...config, ...data };
+      }
+      renderAll();
+    } catch (error) {
+      console.error('Erro ao carregar do GitHub:', error);
+      renderAll();
     }
-    renderAll();
+  }
+  
+  async function saveToGitHub() {
+    const statusDiv = document.getElementById('status');
+    statusDiv.textContent = '💾 Salvando...';
+    statusDiv.style.display = 'block';
+    statusDiv.classList.remove('error-status');
+    
+    try {
+      const response = await fetch('/.netlify/functions/git-gateway/_data/config.json', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(config)
+      });
+      
+      if (response.ok) {
+        statusDiv.textContent = '✅ Salvo no GitHub!';
+        setTimeout(() => { statusDiv.style.display = 'none'; }, 2000);
+      } else {
+        throw new Error('Erro ao salvar');
+      }
+    } catch (error) {
+      console.error('Erro ao salvar:', error);
+      statusDiv.textContent = '❌ Erro ao salvar! Verifique Git Gateway';
+      statusDiv.classList.add('error-status');
+      setTimeout(() => { statusDiv.style.display = 'none'; }, 3000);
+    }
   }
   
   function renderAll() {
@@ -240,19 +269,13 @@
     renderAll();
   };
   
-  function saveAll() {
+  function updateConfigFromInputs() {
     config.nome = document.getElementById('siteNome').value;
     config.bio = document.getElementById('siteBio').value;
     config.logoUrl = document.getElementById('logoUrl').value;
     config.facebook = document.getElementById('facebookUrl').value;
     config.instagram = document.getElementById('instagramUrl').value;
     config.whatsapp = document.getElementById('whatsappUrl').value;
-    
-    localStorage.setItem('afiliadoData', JSON.stringify(config));
-    
-    const status = document.getElementById('status');
-    status.style.display = 'block';
-    setTimeout(() => { status.style.display = 'none'; }, 2000);
   }
   
   document.getElementById('saveRelampago').onclick = () => {
@@ -328,9 +351,12 @@
     }
   };
   
-  document.getElementById('saveAll').onclick = saveAll;
+  document.getElementById('saveAll').onclick = async () => {
+    updateConfigFromInputs();
+    await saveToGitHub();
+  };
   
-  loadFromStorage();
+  loadFromGitHub();
 </script>
 </body>
 </html>
