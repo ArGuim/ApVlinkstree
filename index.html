@@ -60,7 +60,6 @@
     .link-arrow { color: #FF8C00; font-size: 14px; transition: transform 0.2s; }
     .link-card:hover .link-arrow { transform: translateX(4px); }
     
-    /* Oferta Relâmpago (com timer) */
     .relampago-card {
       background: linear-gradient(135deg, rgba(220, 38, 38, 0.2), rgba(249, 115, 22, 0.1));
       border: 2px solid #dc2626;
@@ -82,13 +81,11 @@
       border-radius: 12px; margin-bottom: 12px;
     }
     
-    /* Destaque */
     .destaque-card {
       background: linear-gradient(135deg, rgba(234, 179, 8, 0.15), rgba(249, 115, 22, 0.08));
       border: 2px solid #eab308;
     }
     
-    /* Cupons */
     .cupom-card {
       display: flex; align-items: center; justify-content: space-between;
       padding: 12px 16px; background: rgba(16, 185, 129, 0.1);
@@ -99,7 +96,6 @@
     .cupom-code { font-family: monospace; font-size: 16px; font-weight: 700; color: #10b981; }
     .cupom-copy { color: #10b981; font-size: 14px; }
     
-    /* Social */
     .social-grid { display: flex; justify-content: center; gap: 24px; margin-top: 8px; }
     .social-link {
       display: flex; flex-direction: column; align-items: center; gap: 8px;
@@ -117,12 +113,6 @@
     .delay-1 { animation-delay: 0.1s; }
     .delay-2 { animation-delay: 0.2s; }
     .delay-3 { animation-delay: 0.3s; }
-    
-    .admin-link {
-      text-align: center; margin-top: 20px; font-size: 11px;
-    }
-    .admin-link a { color: #555; text-decoration: none; }
-    .admin-link a:hover { color: #FF8C00; }
   </style>
 </head>
 <body>
@@ -134,10 +124,9 @@
       <span id="logoPlaceholder" class="logo-placeholder">AV</span>
     </div>
     <h1 id="siteName">Achado para Você</h1>
-    <p id="siteBio" class="bio">🚀 Ofertas imperdíveis | Cupons exclusivos</p>
+    <p id="siteBio" class="bio">🚀 Carregando...</p>
   </div>
 
-  <!-- OFERTA RELÂMPAGO (dinâmico) -->
   <div id="relampagoSection" class="section" style="display:none;">
     <div class="section-header">
       <div class="section-icon relampago-icon"><i class="fa-solid fa-bolt"></i></div>
@@ -150,7 +139,6 @@
     <div id="relampagoContent"></div>
   </div>
 
-  <!-- DESTAQUE (dinâmico) -->
   <div id="destaqueSection" class="section delay-1" style="display:none;">
     <div class="section-header">
       <div class="section-icon destaque-icon"><i class="fa-solid fa-fire"></i></div>
@@ -159,7 +147,6 @@
     <div id="destaqueContent"></div>
   </div>
 
-  <!-- SHOPEE (dinâmico) -->
   <div id="shopeeSection" class="section delay-2" style="display:none;">
     <div class="section-header">
       <div class="section-icon shopee-icon"><i class="fa-solid fa-bag-shopping"></i></div>
@@ -168,7 +155,6 @@
     <div id="shopeeLinks" class="links-list"></div>
   </div>
 
-  <!-- MERCADO LIVRE (dinâmico) -->
   <div id="mlSection" class="section delay-2" style="display:none;">
     <div class="section-header">
       <div class="section-icon ml-icon"><i class="fa-solid fa-truck-fast"></i></div>
@@ -177,7 +163,6 @@
     <div id="mlLinks" class="links-list"></div>
   </div>
 
-  <!-- AMAZON (dinâmico) -->
   <div id="amazonSection" class="section delay-2" style="display:none;">
     <div class="section-header">
       <div class="section-icon amazon-icon"><i class="fa-brands fa-amazon"></i></div>
@@ -186,7 +171,6 @@
     <div id="amazonLinks" class="links-list"></div>
   </div>
 
-  <!-- CUPONS (dinâmico) -->
   <div id="cuponsSection" class="section delay-3" style="display:none;">
     <div class="section-header">
       <div class="section-icon cupom-icon"><i class="fa-solid fa-ticket"></i></div>
@@ -195,7 +179,6 @@
     <div id="cuponsList" class="links-list"></div>
   </div>
 
-  <!-- SIGA-NOS -->
   <div class="section delay-3">
     <div class="section-header" style="justify-content: center; border-bottom: none;">
       <h2 style="font-size: 16px;">📱 SIGA-ME</h2>
@@ -211,20 +194,37 @@
     <p>© 2026 <span id="footerName">Achado para Você</span> | Afiliado Digital</p>
     <p style="margin-top: 4px;">Alguns links geram comissão</p>
   </div>
-  
-  <!--S<div class="admin-link">
-    <a href="admin.html">⚙️ Admin</a>
-  </div>-->
 </div>
 
 <script>
-  // Carregar dados do localStorage
-  function loadData() {
-    const data = localStorage.getItem('afiliadoData');
-    if (!data) return;
-    
-    const config = JSON.parse(data);
-    
+  // URL base do GitHub via Netlify Gateway
+  const API_URL = '/.netlify/functions/git-gateway';
+  
+  async function loadData() {
+    try {
+      // Tenta carregar do arquivo JSON no GitHub (via Git Gateway)
+      const response = await fetch('/_data/config.json');
+      if (!response.ok) {
+        console.log('Arquivo não encontrado, usando dados padrão');
+        renderDefault();
+        return;
+      }
+      
+      const config = await response.json();
+      renderPage(config);
+    } catch (error) {
+      console.error('Erro ao carregar dados:', error);
+      renderDefault();
+    }
+  }
+  
+  function renderDefault() {
+    document.getElementById('siteName').textContent = 'Achado para Você';
+    document.getElementById('siteBio').textContent = '🚀 Ofertas imperdíveis | Cupons exclusivos';
+    document.getElementById('footerName').textContent = 'Achado para Você';
+  }
+  
+  function renderPage(config) {
     // Header
     document.getElementById('siteName').textContent = config.nome || 'Achado para Você';
     document.getElementById('siteBio').textContent = config.bio || '🚀 Ofertas imperdíveis | Cupons exclusivos';
@@ -250,17 +250,12 @@
       const timerElement = document.getElementById('timer');
       const container = document.getElementById('relampagoContent');
       
-      container.innerHTML = `
-        <a href="${config.relampago.url}" class="link-card relampago-card">
-          <span class="product-name">${config.relampago.titulo}</span>
-          <i class="fa-solid fa-arrow-right link-arrow"></i>
-        </a>
-      `;
+      container.innerHTML = `<a href="${config.relampago.url}" class="link-card relampago-card"><span class="product-name">${config.relampago.titulo}</span><i class="fa-solid fa-arrow-right link-arrow"></i></a>`;
       
       function updateTimer() {
         if (timeLeft <= 0) {
           document.getElementById('relampagoTimer').style.display = 'none';
-          container.innerHTML = `<div class="offer-ended"><i class="fa-solid fa-clock"></i><p>OFERTA ENCERRADA</p></div>`;
+          container.innerHTML = '<div class="offer-ended"><i class="fa-solid fa-clock"></i><p>OFERTA ENCERRADA</p></div>';
           return;
         }
         const h = Math.floor(timeLeft / 3600);
@@ -276,16 +271,10 @@
     // Destaque
     if (config.destaque && config.destaque.titulo) {
       document.getElementById('destaqueSection').style.display = 'block';
-      document.getElementById('destaqueContent').innerHTML = `
-        <a href="${config.destaque.url}" class="link-card destaque-card">
-          <span class="product-name">${config.destaque.titulo}</span>
-          <i class="fa-solid fa-arrow-right link-arrow"></i>
-        </a>
-      `;
+      document.getElementById('destaqueContent').innerHTML = `<a href="${config.destaque.url}" class="link-card destaque-card"><span class="product-name">${config.destaque.titulo}</span><i class="fa-solid fa-arrow-right link-arrow"></i></a>`;
     }
     
-    
-    // Função para renderizar links (ordem inversa: último cadastrado primeiro)
+    // Links
     function renderLinks(containerId, links) {
       const container = document.getElementById(containerId);
       if (!links || links.length === 0) {
@@ -296,12 +285,10 @@
       const section = container.closest('.section');
       if (section) section.style.display = 'block';
       
-      // .slice().reverse() faz o último cadastrado aparecer primeiro
       container.innerHTML = links.slice().reverse().map(link => `
         <a href="${link.url}" class="link-card">
           <div class="link-info">
             <span class="product-name">${link.titulo}</span>
-            ${link.descricao ? `<span class="product-desc">${link.descricao}</span>` : ''}
           </div>
           <i class="fa-solid fa-arrow-right link-arrow"></i>
         </a>
@@ -326,9 +313,6 @@
   
   loadData();
 </script>
-
-<script>
-  document.addEventListener('contextmenu', function(e) { e.preventDefault(); });
-</script>
+<script>document.addEventListener('contextmenu', function(e) { e.preventDefault(); });</script>
 </body>
 </html>
