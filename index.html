@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  <title>Achado para Você | Links de Afiliado</title>
+  
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #0a0a0a;
+      color: #ffffff;
+      line-height: 1.5;
+    }
+    .container { max-width: 550px; margin: 0 auto; padding: 24px 16px 48px; }
+    .header { text-align: center; margin-bottom: 32px; }
+    .logo {
+      width: 88px; height: 88px; margin: 0 auto 16px; border-radius: 50%;
+      background: linear-gradient(135deg, #FF6B00, #FF8C00);
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden;
+    }
+    .logo img { width: 100%; height: 100%; object-fit: cover; }
+    .logo-placeholder { font-size: 36px; font-weight: 700; color: white; }
+    h1 { font-size: 22px; font-weight: 600; margin-bottom: 8px; }
+    .bio { font-size: 14px; color: #a0a0a0; margin-bottom: 16px; }
+    
+    .section { margin-bottom: 32px; }
+    .section-header {
+      display: flex; align-items: center; gap: 10px;
+      margin-bottom: 16px; padding-bottom: 8px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .section-icon {
+      width: 32px; height: 32px; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px;
+    }
+    .shopee-icon { background: #EE4D2D; }
+    .ml-icon { background: #FFE600; color: #000; }
+    .amazon-icon { background: #FF9900; }
+    .relampago-icon { background: #dc2626; }
+    .destaque-icon { background: #eab308; }
+    .cupom-icon { background: #10b981; }
+    .section-header h2 { font-size: 18px; font-weight: 600; }
+    
+    .links-list { display: flex; flex-direction: column; gap: 12px; }
+    .link-card {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 18px; background: rgba(255, 255, 255, 0.05);
+      border-radius: 16px; text-decoration: none;
+      transition: all 0.2s ease; border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .link-card:hover { background: rgba(255, 255, 255, 0.1); transform: translateX(4px); border-color: rgba(255, 107, 0, 0.3); }
+    .product-name { font-weight: 500; font-size: 15px; color: #fff; }
+    .link-arrow { color: #FF8C00; font-size: 14px; transition: transform 0.2s; }
+    .link-card:hover .link-arrow { transform: translateX(4px); }
+    
+    /* Oferta Relâmpago (com timer) */
+    .relampago-card {
+      background: linear-gradient(135deg, rgba(220, 38, 38, 0.2), rgba(249, 115, 22, 0.1));
+      border: 2px solid #dc2626;
+      animation: pulse-border 1.5s ease-in-out infinite;
+    }
+    @keyframes pulse-border {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.4); }
+      50% { box-shadow: 0 0 0 6px rgba(220, 38, 38, 0); }
+    }
+    .timer-container {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 12px; padding: 8px 12px;
+      background: rgba(220, 38, 38, 0.2); border-radius: 12px;
+    }
+    .timer-text { color: #f87171; font-size: 14px; font-weight: 500; }
+    .timer { font-family: monospace; font-size: 20px; font-weight: 700; color: #f87171; }
+    .offer-ended {
+      text-align: center; padding: 12px; background: rgba(38, 38, 38, 0.5);
+      border-radius: 12px; margin-bottom: 12px;
+    }
+    
+    /* Destaque */
+    .destaque-card {
+      background: linear-gradient(135deg, rgba(234, 179, 8, 0.15), rgba(249, 115, 22, 0.08));
+      border: 2px solid #eab308;
+    }
+    
+    /* Cupons */
+    .cupom-card {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 12px 16px; background: rgba(16, 185, 129, 0.1);
+      border-radius: 12px; border: 1px solid rgba(16, 185, 129, 0.3);
+      cursor: pointer; transition: all 0.2s;
+    }
+    .cupom-card:hover { background: rgba(16, 185, 129, 0.2); }
+    .cupom-code { font-family: monospace; font-size: 16px; font-weight: 700; color: #10b981; }
+    .cupom-copy { color: #10b981; font-size: 14px; }
+    
+    /* Social */
+    .social-grid { display: flex; justify-content: center; gap: 24px; margin-top: 8px; }
+    .social-link {
+      display: flex; flex-direction: column; align-items: center; gap: 8px;
+      text-decoration: none; color: #a0a0a0; transition: color 0.2s; font-size: 13px;
+    }
+    .social-link i { font-size: 28px; }
+    .social-link:hover { color: #FF8C00; }
+    .social-link.facebook:hover i { color: #1877F2; }
+    .social-link.instagram:hover i { color: #E4405F; }
+    .social-link.whatsapp:hover i { color: #25D366; }
+    
+    .footer { text-align: center; margin-top: 40px; padding-top: 24px; border-top: 1px solid rgba(255, 255, 255, 0.08); font-size: 12px; color: #555; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    .section, .header { animation: fadeIn 0.4s ease forwards; }
+    .delay-1 { animation-delay: 0.1s; }
+    .delay-2 { animation-delay: 0.2s; }
+    .delay-3 { animation-delay: 0.3s; }
+    
+    .admin-link {
+      text-align: center; margin-top: 20px; font-size: 11px;
+    }
+    .admin-link a { color: #555; text-decoration: none; }
+    .admin-link a:hover { color: #FF8C00; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <div class="logo">
+      <img id="logoImg" src="" alt="Logo" style="display:none;">
+      <span id="logoPlaceholder" class="logo-placeholder">AV</span>
+    </div>
+    <h1 id="siteName">Achado para Você</h1>
+    <p id="siteBio" class="bio">🚀 Ofertas imperdíveis | Cupons exclusivos</p>
+  </div>
+
+  <!-- OFERTA RELÂMPAGO (dinâmico) -->
+  <div id="relampagoSection" class="section" style="display:none;">
+    <div class="section-header">
+      <div class="section-icon relampago-icon"><i class="fa-solid fa-bolt"></i></div>
+      <h2>⚡ OFERTA RELÂMPAGO</h2>
+    </div>
+    <div id="relampagoTimer" class="timer-container">
+      <span class="timer-text">⏰ ACABA EM:</span>
+      <span id="timer" class="timer">00:00:00</span>
+    </div>
+    <div id="relampagoContent"></div>
+  </div>
+
+  <!-- DESTAQUE (dinâmico) -->
+  <div id="destaqueSection" class="section delay-1" style="display:none;">
+    <div class="section-header">
+      <div class="section-icon destaque-icon"><i class="fa-solid fa-fire"></i></div>
+      <h2>🔥 DESTAQUE</h2>
+    </div>
+    <div id="destaqueContent"></div>
+  </div>
+
+  <!-- SHOPEE (dinâmico) -->
+  <div id="shopeeSection" class="section delay-2" style="display:none;">
+    <div class="section-header">
+      <div class="section-icon shopee-icon"><i class="fa-solid fa-bag-shopping"></i></div>
+      <h2>SHOPEE</h2>
+    </div>
+    <div id="shopeeLinks" class="links-list"></div>
+  </div>
+
+  <!-- MERCADO LIVRE (dinâmico) -->
+  <div id="mlSection" class="section delay-2" style="display:none;">
+    <div class="section-header">
+      <div class="section-icon ml-icon"><i class="fa-solid fa-truck-fast"></i></div>
+      <h2>MERCADO LIVRE</h2>
+    </div>
+    <div id="mlLinks" class="links-list"></div>
+  </div>
+
+  <!-- AMAZON (dinâmico) -->
+  <div id="amazonSection" class="section delay-2" style="display:none;">
+    <div class="section-header">
+      <div class="section-icon amazon-icon"><i class="fa-brands fa-amazon"></i></div>
+      <h2>AMAZON</h2>
+    </div>
+    <div id="amazonLinks" class="links-list"></div>
+  </div>
+
+  <!-- CUPONS (dinâmico) -->
+  <div id="cuponsSection" class="section delay-3" style="display:none;">
+    <div class="section-header">
+      <div class="section-icon cupom-icon"><i class="fa-solid fa-ticket"></i></div>
+      <h2>🎟️ CUPONS</h2>
+    </div>
+    <div id="cuponsList" class="links-list"></div>
+  </div>
+
+  <!-- SIGA-NOS -->
+  <div class="section delay-3">
+    <div class="section-header" style="justify-content: center; border-bottom: none;">
+      <h2 style="font-size: 16px;">📱 SIGA-ME</h2>
+    </div>
+    <div class="social-grid">
+      <a href="#" id="socialFacebook" class="social-link facebook"><i class="fa-brands fa-facebook"></i><span>Facebook</span></a>
+      <a href="#" id="socialInstagram" class="social-link instagram"><i class="fa-brands fa-instagram"></i><span>Instagram</span></a>
+      <a href="#" id="socialWhatsapp" class="social-link whatsapp"><i class="fa-brands fa-whatsapp"></i><span>WhatsApp</span></a>
+    </div>
+  </div>
+
+  <div class="footer">
+    <p>© 2026 <span id="footerName">Achado para Você</span> | Afiliado Digital</p>
+    <p style="margin-top: 4px;">Alguns links geram comissão</p>
+  </div>
+  
+  <!--S<div class="admin-link">
+    <a href="admin.html">⚙️ Admin</a>
+  </div>-->
+</div>
+
+<script>
+  // Carregar dados do localStorage
+  function loadData() {
+    const data = localStorage.getItem('afiliadoData');
+    if (!data) return;
+    
+    const config = JSON.parse(data);
+    
+    // Header
+    document.getElementById('siteName').textContent = config.nome || 'Achado para Você';
+    document.getElementById('siteBio').textContent = config.bio || '🚀 Ofertas imperdíveis | Cupons exclusivos';
+    document.getElementById('footerName').textContent = config.nome || 'Achado para Você';
+    
+    // Logo
+    if (config.logoUrl) {
+      const img = document.getElementById('logoImg');
+      img.src = config.logoUrl;
+      img.style.display = 'block';
+      document.getElementById('logoPlaceholder').style.display = 'none';
+    }
+    
+    // Redes Sociais
+    if (config.facebook) document.getElementById('socialFacebook').href = config.facebook;
+    if (config.instagram) document.getElementById('socialInstagram').href = config.instagram;
+    if (config.whatsapp) document.getElementById('socialWhatsapp').href = config.whatsapp;
+    
+    // Oferta Relâmpago
+    if (config.relampago && config.relampago.titulo) {
+      document.getElementById('relampagoSection').style.display = 'block';
+      let timeLeft = (config.relampago.timerHoras || 2) * 60 * 60;
+      const timerElement = document.getElementById('timer');
+      const container = document.getElementById('relampagoContent');
+      
+      container.innerHTML = `
+        <a href="${config.relampago.url}" class="link-card relampago-card">
+          <span class="product-name">${config.relampago.titulo}</span>
+          <i class="fa-solid fa-arrow-right link-arrow"></i>
+        </a>
+      `;
+      
+      function updateTimer() {
+        if (timeLeft <= 0) {
+          document.getElementById('relampagoTimer').style.display = 'none';
+          container.innerHTML = `<div class="offer-ended"><i class="fa-solid fa-clock"></i><p>OFERTA ENCERRADA</p></div>`;
+          return;
+        }
+        const h = Math.floor(timeLeft / 3600);
+        const m = Math.floor((timeLeft % 3600) / 60);
+        const s = timeLeft % 60;
+        timerElement.textContent = `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+        timeLeft--;
+      }
+      updateTimer();
+      setInterval(updateTimer, 1000);
+    }
+    
+    // Destaque
+    if (config.destaque && config.destaque.titulo) {
+      document.getElementById('destaqueSection').style.display = 'block';
+      document.getElementById('destaqueContent').innerHTML = `
+        <a href="${config.destaque.url}" class="link-card destaque-card">
+          <span class="product-name">${config.destaque.titulo}</span>
+          <i class="fa-solid fa-arrow-right link-arrow"></i>
+        </a>
+      `;
+    }
+    
+    
+    // Função para renderizar links (ordem inversa: último cadastrado primeiro)
+    function renderLinks(containerId, links) {
+      const container = document.getElementById(containerId);
+      if (!links || links.length === 0) {
+        const section = container.closest('.section');
+        if (section) section.style.display = 'none';
+        return;
+      }
+      const section = container.closest('.section');
+      if (section) section.style.display = 'block';
+      
+      // .slice().reverse() faz o último cadastrado aparecer primeiro
+      container.innerHTML = links.slice().reverse().map(link => `
+        <a href="${link.url}" class="link-card">
+          <div class="link-info">
+            <span class="product-name">${link.titulo}</span>
+            ${link.descricao ? `<span class="product-desc">${link.descricao}</span>` : ''}
+          </div>
+          <i class="fa-solid fa-arrow-right link-arrow"></i>
+        </a>
+      `).join('');
+    }
+    
+    renderLinks('shopeeLinks', config.shopee || []);
+    renderLinks('mlLinks', config.mercadoLivre || []);
+    renderLinks('amazonLinks', config.amazon || []);
+    
+    // Cupons
+    if (config.cupons && config.cupons.length > 0) {
+      document.getElementById('cuponsSection').style.display = 'block';
+      document.getElementById('cuponsList').innerHTML = config.cupons.map(cupom => `
+        <div class="cupom-card" onclick="navigator.clipboard.writeText('${cupom.codigo}'); alert('Cupom ${cupom.codigo} copiado!')">
+          <span class="cupom-code">${cupom.codigo}</span>
+          <span class="cupom-copy"><i class="fa-regular fa-copy"></i> ${cupom.desconto}</span>
+        </div>
+      `).join('');
+    }
+  }
+  
+  loadData();
+</script>
+
+<script>
+  document.addEventListener('contextmenu', function(e) { e.preventDefault(); });
+</script>
+</body>
+</html>
