@@ -196,24 +196,37 @@
   </div>
 </div>
 
-<script>
-  // URL base do GitHub via Netlify Gateway
-  const API_URL = '/.netlify/functions/git-gateway';
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
+  import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
   
+  const firebaseConfig = {
+    apiKey: "AIzaSyANJbYgU2cFU8w8alKDClO22ocjIywP__s",
+    authDomain: "apvlinkstree.firebaseapp.com",
+    projectId: "apvlinkstree",
+    storageBucket: "apvlinkstree.firebasestorage.app",
+    messagingSenderId: "1051197353813",
+    appId: "1:1051197353813:web:7811ac8359b096ca2c49dc"
+  };
+  
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+  
+  // 🔥 carregar dados do Firestore
   async function loadData() {
     try {
-      // Tenta carregar do arquivo JSON no GitHub (via Git Gateway)
-      const response = await fetch('/_data/config.json');
-      if (!response.ok) {
-        console.log('Arquivo não encontrado, usando dados padrão');
+      const docRef = doc(db, "principal", "config");
+      const docSnap = await getDoc(docRef);
+  
+      if (docSnap.exists()) {
+        const config = docSnap.data();
+        renderPage(config);
+      } else {
+        console.log("Sem dados no Firebase");
         renderDefault();
-        return;
       }
-      
-      const config = await response.json();
-      renderPage(config);
     } catch (error) {
-      console.error('Erro ao carregar dados:', error);
+      console.error("Erro:", error);
       renderDefault();
     }
   }
