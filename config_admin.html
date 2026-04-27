@@ -136,7 +136,9 @@
   document.getElementById('saveAll').onclick = saveToFirebase;
 
   // 🔥 AGORA SIM (DEPOIS DO CONFIG)
-  loadFromFirebase();
+  loadFromFirebase().then(() => {
+  console.log("Dados carregados do Firebase");
+});
 
 </script>
 </body>
